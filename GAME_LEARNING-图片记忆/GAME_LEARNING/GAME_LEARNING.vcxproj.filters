@@ -87,4 +87,18 @@
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="C:\Users\t\Desktop\VisualCPP\Chap12\Brainiac 2\Res\Match.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="C:\Users\t\Desktop\VisualCPP\Chap12\Brainiac 2\Res\Mismatch.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="C:\Users\t\Desktop\VisualCPP\Chap12\Brainiac 2\Res\Select.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+    <Media Include="C:\Users\t\Desktop\VisualCPP\Chap12\Brainiac 2\Res\Win.wav">
+      <Filter>资源文件</Filter>
+    </Media>
+  </ItemGroup>
 </Project>

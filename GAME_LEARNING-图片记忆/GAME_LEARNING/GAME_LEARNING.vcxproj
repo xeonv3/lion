@@ -57,7 +57,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,6 +110,12 @@
     <Image Include="C:\Users\t\Desktop\cbook_beggameprog_code\Examples\VisualCPP\Chap06\Brainiac\Res\TileBlank.bmp" />
     <Image Include="ico_16.ico" />
     <Image Include="ico_32.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="C:\Users\t\Desktop\VisualCPP\Chap12\Brainiac 2\Res\Match.wav" />
+    <Media Include="C:\Users\t\Desktop\VisualCPP\Chap12\Brainiac 2\Res\Mismatch.wav" />
+    <Media Include="C:\Users\t\Desktop\VisualCPP\Chap12\Brainiac 2\Res\Select.wav" />
+    <Media Include="C:\Users\t\Desktop\VisualCPP\Chap12\Brainiac 2\Res\Win.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -101,28 +101,31 @@ void MouseButtonDown(int x,int y, BOOL bLeft){
 	int iTileY = y / g_pTiles[0]->GetHeight();
 	if(!g_bTileStates[iTileX][iTileY]){
 		if(g_ptTile1.x == -1){
+			PlaySound((LPCWSTR)IDR_SELECT,g_hInstance,SND_ASYNC|SND_RESOURCE);
 			g_ptTile1.x = iTileX;
 			g_ptTile1.y = iTileY;
 		}else if(g_ptTile1.x != iTileX || g_ptTile1.y != iTileY){
 			if(g_ptTile2.x == -1){
 				++g_iTries;
-
+				PlaySound((LPCWSTR)IDR_SELECT,g_hInstance,SND_ASYNC|SND_RESOURCE);
 				g_ptTile2.x = iTileX;
 				g_ptTile2.y = iTileY;
 
 				if(g_iTiles[g_ptTile1.x][g_ptTile1.y] == g_iTiles[g_ptTile2.x][g_ptTile2.y]){
 					g_bTileStates[g_ptTile1.x][g_ptTile1.y]=TRUE;
 					g_bTileStates[g_ptTile2.x][g_ptTile2.y]=TRUE;
-
+					PlaySound((LPCWSTR)IDR_MATCH,g_hInstance,SND_ASYNC|SND_RESOURCE);
 					g_ptTile1.x = g_ptTile1.y = g_ptTile2.x = g_ptTile2.y = -1;
 
 					if(++g_iMatches == 8){
 						TCHAR szText[64];
+						PlaySound((LPCWSTR)IDR_WIN,g_hInstance,SND_ASYNC|SND_RESOURCE);
 						wsprintf(szText, TEXT("You won in %d tries."), g_iTries);
 						MessageBox(g_pGame->GetWindow(), szText, TEXT("Brainiac"), MB_OK);
 					}
 				}
 			}else{
+				PlaySound((LPCWSTR)IDR_MISMATCH,g_hInstance,SND_ASYNC|SND_RESOURCE);
 				g_ptTile1.x = g_ptTile1.y = g_ptTile2.x = g_ptTile2.y = -1;
 			}
 		}
