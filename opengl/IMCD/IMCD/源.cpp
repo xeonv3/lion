@@ -6,6 +6,7 @@
 #pragma comment(lib,"glew32.lib")
 static GLuint ag=0.0; //torus转动角度
 int WIDTH = 800, HEIGHT = 600;//窗口大小
+bool rendermode = true;
 double CalFrequency(){
 	static int count;
 	static double save;
@@ -21,18 +22,25 @@ double CalFrequency(){
 	save=50.0/timegap;
 	return save;
 }
-
-
+void reshape(int w,int h);
+inline void drawTorus(){
+	glRotated(ag,0,1,0);
+	glColor3f(0.0,0.0,1.0);
+	glutSolidTorus(50.0,180.0,60,100);
+}
+inline void drawTeapot(){
+	glColor3f(0.0,1.0,0.0);
+	glutSolidTeapot(100.0);
+}
 GLuint depthQuery;
 bool CollisionDetection(){
-	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+	if(rendermode)
+		glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
 	//将投影矩阵设为正投影，并且由此限制渲染区域
 	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
 	glLoadIdentity();
-	gluOrtho2D(-1.5,1.7,-0.7,0.8);
+	glOrtho(-160,180,-80,90,-10,1000.0);
 	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
 	glLoadIdentity();
 	//启用深度、模板、裁剪测试，将裁剪区域设置为A、B投影相交的区域
 	//一般来将需要用包围盒相交来做，但我这里做了简化，A、B相交区域就是A投影区域
@@ -45,17 +53,14 @@ bool CollisionDetection(){
 	glDepthFunc(GL_GREATER);
 	glStencilFunc(GL_ALWAYS,1,~0);
 	glStencilOp(GL_KEEP,GL_KEEP,GL_REPLACE);
-	glColor3f(0.0,1.0,0.0);
-	glutSolidTeapot(1.0);
+	drawTeapot();
 	//B
 	glDepthFunc(GL_LEQUAL);
 	glStencilFunc(GL_EQUAL,1,~0);
 	glStencilOp(GL_KEEP,GL_KEEP,GL_INCR);
-	glLoadIdentity();
-	glRotated(ag,0,1,0);
-	glColor3f(1.0,0.0,0.0);
-	glutSolidTorus(0.5,2.0,10,20);
-
+	glPushMatrix();
+	drawTorus();
+	glPopMatrix();
 	//第二次渲染
 	glClearDepth(0.0);
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -63,18 +68,16 @@ bool CollisionDetection(){
 	glDepthFunc(GL_GREATER);
 	glStencilFunc(GL_EQUAL,2,~0);
 	glStencilOp(GL_KEEP,GL_KEEP,GL_KEEP);
-	glLoadIdentity();
-	glRotated(ag,0,1,0);
-	glColor3f(0.0,0.0,1.0);
-	glutSolidTorus(0.5,2.0,10,20);
+	glPushMatrix();
+	drawTorus();
+	glPopMatrix();
 	//A，并使用遮挡查询
 	glGenQueries(1,&depthQuery);
 	glBeginQuery(GL_SAMPLES_PASSED,depthQuery);
 	glDepthFunc(GL_LEQUAL);
 	glStencilFunc(GL_EQUAL,2,~0);
 	glStencilOp(GL_KEEP,GL_KEEP,GL_INCR);
-	glColor3f(1.0,1.0,0.0);
-	glutSolidTeapot(1.0);
+	drawTeapot();
 	glEndQuery(GL_SAMPLES_PASSED);
 	int count = 1000;
 	GLint queryReady = 0;
@@ -90,12 +93,9 @@ bool CollisionDetection(){
 	glClearDepth(1.0);
 	glDepthFunc(GL_LESS);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
+	reshape(WIDTH,HEIGHT);
 	glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
-	return samples > 0;		
+	return samples > 0;
 }
 void init(){
 	glClearColor(1.0,1.0,1.0,1.0);
@@ -108,23 +108,25 @@ void reshape(int w,int h){
 	glViewport(0,0,(GLsizei)WIDTH,(GLsizei)HEIGHT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60,(GLfloat)w/(GLfloat)h,1.0,100.0);
+	gluPerspective(60,(GLfloat)w/(GLfloat)h,1.0,1000.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	gluLookAt(0.0,0.0,600.0,0.0,0.0,-10.0,0,1,0);
 }
+
 void display(){
-	printf("FPS = %f\t\t",CalFrequency());
+	printf("FPS = %f\t",CalFrequency());
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
-	glLoadIdentity();
-	glTranslatef(0.0,0.0,-10.0);
-	glColor3f(0.0,1.0,0.0);
-	glutSolidTeapot(1.0);
-	
-	glLoadIdentity();
-	glTranslatef(0.0,0.0,-10.0);
-	glRotated(ag,0,1,0);
-	glColor3f(0.0,0.0,1.0);
-	glutSolidTorus(0.5,2.0,10,20);
+	glMatrixMode(GL_MODELVIEW);	
+	if(rendermode){
+		glPushMatrix();
+		drawTeapot();
+		glPopMatrix();
+
+		glPushMatrix();
+		drawTorus();
+		glPopMatrix();
+	}
 	static clock_t last,current;
 	last = clock();
 	bool cd = CollisionDetection();

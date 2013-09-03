@@ -6,11 +6,13 @@
 //#pragma comment(lib,"glew32.lib")
 //GLuint ag = 0;
 //int WIDTH = 800, HEIGHT = 600;//´°¿Ú´óÐ¡
+//
 //void init(){
 //	glClearColor(1.0,1.0,1.0,1.0);
 //	glEnable(GL_DEPTH_TEST);
 //	glColor3f(0.0,1.0,0.0);
 //}
+//
 //void reshape(int w,int h){
 //	WIDTH = w; HEIGHT = h;
 //	glViewport(0,0,(GLsizei)WIDTH,(GLsizei)HEIGHT);
@@ -18,13 +20,18 @@
 //	glLoadIdentity();
 //	gluOrtho2D(-1.5,1.7,-0.7,0.8);
 //	glMatrixMode(GL_MODELVIEW);
+//	glLoadIdentity();
 //}
 //
 //void display(){
 //	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+//	glMatrixMode(GL_MODELVIEW);
 //	glLoadIdentity();
+//	gluLookAt(0,0,-1,0,0,0,0,1,0);
+//	glPushMatrix();
 //	glRotated(ag,0,1,0);
 //	glutSolidTeapot(1.0);
+//	glPopMatrix();
 //	glutSwapBuffers();
 //}
 //void idle(){
@@ -48,7 +55,7 @@
 //	init();
 //	glutDisplayFunc(display);
 //	glutReshapeFunc(reshape);
-//	glutIdleFunc(idle);
+//	//glutIdleFunc(idle);
 //	glutMainLoop();
 //	return 0;
 //}
